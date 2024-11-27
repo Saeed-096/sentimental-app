@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
+import { Button } from "@/components/ui/button";
 
 export default function SentimentAnalysis() {
   const [input, setInput] = useState("");
@@ -144,16 +145,34 @@ export default function SentimentAnalysis() {
               <p className="text-white/80 mb-4">
                 Enter the twitter handle or hashtag to import tweets from
               </p>
-              <Input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="@twitter_handle or #content"
-                className="w-full bg-white/10 border-white/20 text-white placeholder-white/50 rounded-full pl-4 pr-12 h-12"
-              />
-              <div className="absolute right-1 top-[calc(50%+16px)] -translate-y-1/2 bg-transparent p-2 text-white">
-                <Search className="w-6 h-6" />
-              </div>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  // Implement your search logic here
+                  console.log("Searching for:", input);
+                }}
+                className="w-full mx-auto"
+              >
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="relative flex-grow">
+                    <Input
+                      type="text"
+                      placeholder="Enter Twitter handle..."
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      className="w-full pr-10 rounded-full bg-white/10 border-white/20 text-white placeholder-white/50"
+                    />
+                    <Button
+                      type="submit"
+                      size="icon"
+                      className="absolute right-0 top-0 h-full aspect-square rounded-r-full bg-white/10 hover:bg-white/20"
+                    >
+                      <Search className="h-4 w-4 text-white" />
+                      <span className="sr-only">Search</span>
+                    </Button>
+                  </div>
+                </div>
+              </form>
             </div>
           </>
 
