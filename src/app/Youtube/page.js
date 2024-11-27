@@ -185,7 +185,7 @@ export default function SentimentAnalysis() {
           )}
         </div>
 
-        <div className=" w-[60%] max-w-[600px] opacity-20 md:opacity-100">
+        <div className=" w-[60%] max-w-[600px] opacity-100 hidden md:flex">
           <svg viewBox="0 0 24 24" className="w-full h-full fill-[#FF0000]">
             <path d="M23.498 6.186a2.873 2.873 0 0 0-2.022-2.042C19.646 3.5 12 3.5 12 3.5s-7.646 0-9.476.644A2.873 2.873 0 0 0 .502 6.186C0 8.072 0 12 0 12s0 3.928.502 5.814a2.873 2.873 0 0 0 2.022 2.042C4.354 20.5 12 20.5 12 20.5s7.646 0 9.476-.644a2.873 2.873 0 0 0 2.022-2.042C24 15.928 24 12 24 12s0-3.928-.502-5.814zM9.75 15.02v-6.04L15.5 12l-5.75 3.02z" />
           </svg>

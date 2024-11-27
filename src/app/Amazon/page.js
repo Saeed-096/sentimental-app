@@ -185,7 +185,7 @@ export default function SentimentAnalysis() {
           )}
         </div>
 
-        <div className=" w-[60%] max-w-[600px] opacity-20 md:opacity-100">
+        <div className=" w-[60%] max-w-[600px] opacity-100 hidden md:flex">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             shapeRendering="geometricPrecision"
