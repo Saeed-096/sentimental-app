@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+tweepy
+textblob
+vaderSentiment
+python-dotenv

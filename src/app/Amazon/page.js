@@ -2,64 +2,44 @@
 
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 
 export default function SentimentAnalysis() {
-  const [input, setInput] = useState("");
-  const [handle, setHandle] = useState("");
-  const [tweets, setTweets] = useState([]);
+  const [file, setFile] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
-  useEffect(() => {
-    if (input.trim() !== "") {
-      // Simulate API call with setTimeout
-      const timer = setTimeout(() => {
-        setHandle(input.trim());
-        // Mock data - in a real app, you'd fetch this from an API
-        setTweets([
-          {
-            id: 1,
-            text: "the Foreign Intelligence Surveillance Act against so many U.S. citizens presents a fundamental threat...",
-            sentiment: "Positive",
-          },
-          {
-            id: 2,
-            text: "RT @marc_lotter: Come on man... Seriously? 🤦‍♂️",
-            sentiment: "Negative",
-          },
-          {
-            id: 3,
-            text: "RT @MarshaBlackburn: Susan Rice knew exactly what she was doing. That's why she wrote herself",
-            sentiment: "Negative",
-          },
-          {
-            id: 4,
-            text: "RT @MarshaBlackburn: Susan Rice knew exactly what she was doing. That's why she wrote herself",
-            sentiment: "Negative",
-          },
-          {
-            id: 5,
-            text: "RT @MarshaBlackburn: Susan Rice knew exactly what she was doing. That's why she wrote herself",
-            sentiment: "Negative",
-          },
-          {
-            id: 6,
-            text: "RT @MarshaBlackburn: Susan Rice knew exactly what she was doing. That's why she wrote herself",
-            sentiment: "Negative",
-          },
-          {
-            id: 7,
-            text: "RT @MarshaBlackburn: Susan Rice knew exactly what she was doing. That's why she wrote herself",
-            sentiment: "Negative",
-          },
-        ]);
-      }, 500); // 500ms delay to simulate API call
+  const handleFileUpload = async (e) => {
+    setFile(e.target.files[0]);
+  };
 
-      return () => clearTimeout(timer);
+  const handleSubmit = async () => {
+    if (!file) {
+      alert("Please select a file before uploading.");
+      return;
     }
-  }, [input]);
 
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("http://localhost:8000/upload/", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        alert(`Error: ${data.error}`);
+      } else {
+        setReviews(data.data);
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to upload file. Check the backend.");
+    }
+  };
   const SentimentEmoji = ({ sentiment }) => {
     switch (sentiment) {
       case "Positive":
@@ -120,13 +100,10 @@ export default function SentimentAnalysis() {
           <h1 className="text-6xl font-bold text-white mb-2">
             Sentiment Analysis
           </h1>
-          {handle ? (
-            <p className="text-xl text-white/80 mb-8">Handle - @{handle}</p>
-          ) : (
-            <p className="text-xl text-white/80 mb-8">
-              Categorises tweet under Positive, Neutral or Negative
-            </p>
-          )}
+
+          <p className="text-xl text-white/80 mb-8">
+            Categorises tweet under Positive, Neutral or Negative
+          </p>
 
           <>
             <div className="flex space-x-8 mb-8">
@@ -143,57 +120,47 @@ export default function SentimentAnalysis() {
 
             <div className="relative mb-4 sm:mb-6 md:mb-8 ">
               <p className="text-white/80 mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base">
-                Enter the URL of Amazon product to import reviews from
+                Upload a CSV file containing reviews
               </p>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  // Implement your search logic here
-                  console.log("Searching for:", input);
-                }}
-                className="w-full mx-auto"
-              >
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <div className="relative flex-grow">
-                    <Input
-                      type="text"
-                      placeholder="Enter Twitter handle..."
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      className="w-full pr-10 rounded-full bg-white/10 border-white/20 text-white placeholder-white/50"
-                    />
-                    <Button
-                      type="submit"
-                      size="icon"
-                      className="absolute right-0 top-0 h-full aspect-square rounded-r-full bg-white/10 hover:bg-white/20"
-                    >
-                      <Search className="h-4 w-4 text-white" />
-                      <span className="sr-only">Search</span>
-                    </Button>
-                  </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div className="relative flex-grow">
+                  <Input
+                    type="file"
+                    accept=".csv"
+                    onChange={handleFileUpload}
+                    className="w-full pr-10 rounded-full bg-white/10 border-white/20 text-white placeholder-white/50"
+                  />
+                  <Button
+                    onClick={handleSubmit}
+                    className="absolute right-0 top-0 h-full aspect-square rounded-r-full bg-white/10 hover:bg-white/20"
+                  >
+                    <span className="text-gray-50">Upload & Analyze</span>
+                  </Button>
                 </div>
-              </form>
+              </div>
             </div>
           </>
 
-          {handle && (
+          {reviews.length > 0 && (
             <div className="bg-[#3C0A1D] rounded-lg overflow-auto max-h-64">
               <table className="w-full text-white">
                 <thead>
                   <tr>
-                    <th className="text-left p-4 font-bold">TWEET</th>
+                    <th className="text-left p-4 font-bold">REVIEW</th>
                     <th className="text-left p-4 font-bold">SENTIMENT</th>
                     <th className="text-left p-4 font-bold">EMOTAG</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {tweets.map((tweet) => (
-                    <tr key={tweet.id} className="border-t border-white/10">
-                      <td className="p-4 text-white/90">{tweet.text}</td>
-                      <td className="p-4 text-white/90">{tweet.sentiment}</td>
+                  {reviews.map((review, index) => (
+                    <tr key={index} className="border-t border-white/10">
+                      <td className="p-4 text-white/90">{review.review}</td>
+                      <td className="p-4 text-white/90">
+                        {review.sentiment || "N/A"}
+                      </td>
                       <td className="p-4">
                         <div className="w-10 h-10">
-                          <SentimentEmoji sentiment={tweet.sentiment} />
+                          <SentimentEmoji sentiment={review.sentiment} />
                         </div>
                       </td>
                     </tr>
