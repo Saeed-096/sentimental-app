@@ -102,7 +102,7 @@ export default function SentimentAnalysis() {
           </h1>
 
           <p className="text-xl text-white/80 mb-8">
-            Categorises tweet under Positive, Neutral or Negative
+            Categorises Review under Positive, Neutral or Negative
           </p>
 
           <>

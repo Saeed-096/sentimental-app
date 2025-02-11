@@ -1,22 +1,70 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 
 export function SentimentAnalyzer() {
   const [text, setText] = useState(""); // State for input text
   const [sentiment, setSentiment] = useState(null); // State for sentiment analysis results
+  const [confidence, setconfidence] = useState(null);
+  const analyzeSentiment = async () => {
+    const response = await axios.post("http://localhost:7000/homeanalyze", {
+      text,
+    });
 
-  const analyzeSentiment = () => {
-    // Simulate sentiment analysis
-    if (text.trim().length > 0) {
-      setSentiment({
-        tag: "Positive",
-        confidence: 99.1,
-      });
-    } else {
-      setSentiment(null);
+    setSentiment(response.data.sentiment);
+  };
+  const SentimentEmoji = ({ sentiment }) => {
+    switch (sentiment) {
+      case "Positive":
+        return (
+          <svg viewBox="0 0 24 24" className="w-full h-full">
+            <circle cx="12" cy="12" r="12" fill="#9FD356" />
+            <path
+              d="M7 14s.5 3 5 3 5-3 5-3"
+              fill="none"
+              stroke="#557A1D"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <circle cx="8" cy="9" r="1.5" fill="#557A1D" />
+            <circle cx="16" cy="9" r="1.5" fill="#557A1D" />
+          </svg>
+        );
+      case "Negative":
+        return (
+          <svg viewBox="0 0 24 24" className="w-full h-full">
+            <circle cx="12" cy="12" r="12" fill="#FF4141" />
+            <path
+              d="M7 16s.5-3 5-3 5 3 5 3"
+              fill="none"
+              stroke="#B50000"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <circle cx="8" cy="9" r="1.5" fill="#B50000" />
+            <circle cx="16" cy="9" r="1.5" fill="#B50000" />
+          </svg>
+        );
+      default:
+        return (
+          <svg viewBox="0 0 24 24" className="w-full h-full">
+            <circle cx="12" cy="12" r="12" fill="#FFB627" />
+            <line
+              x1="7"
+              y1="14"
+              x2="17"
+              y2="14"
+              stroke="#B17800"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <circle cx="8" cy="9" r="1.5" fill="#B17800" />
+            <circle cx="16" cy="9" r="1.5" fill="#B17800" />
+          </svg>
+        );
     }
   };
 
@@ -49,11 +97,14 @@ export function SentimentAnalyzer() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between text-sm font-medium uppercase text-gray-500">
                   <span>TAG</span>
-                  <span>CONFIDENCE</span>
+                  <span>Sentiment</span>
                 </div>
+
                 <div className="flex items-center justify-between font-medium text-green-600">
-                  <span>{sentiment.tag}</span>
-                  <span>{sentiment.confidence.toFixed(1)}%</span>
+                  <span>{sentiment}</span>
+                  <div className="w-10 h-10">
+                    <SentimentEmoji sentiment={sentiment} />
+                  </div>
                 </div>
               </div>
             ) : (

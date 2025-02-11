@@ -124,7 +124,7 @@ export default function SentimentAnalysis() {
             <p className="text-xl text-white/80 mb-8">Handle - @{handle}</p>
           ) : (
             <p className="text-xl text-white/80 mb-8">
-              Categorises tweet under Positive, Neutral or Negative
+              Categorises Tweet under Positive, Neutral or Negative
             </p>
           )}
 

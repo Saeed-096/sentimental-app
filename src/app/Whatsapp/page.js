@@ -99,7 +99,7 @@ export default function SentimentAnalysis() {
           </h1>
 
           <p className="text-xl text-white/80 mb-8">
-            Categorises chat under Positive, Neutral or Negative
+            Categorises Chats under Positive, Neutral or Negative
           </p>
 
           <>
